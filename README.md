@@ -35,7 +35,7 @@ Check them out at https://www.amigoscode.com
 ## 📸 Screenshots
 ![Server UI Page](https://github.com/user-attachments/assets/5be545f9-0448-4bc8-966b-6b19ef33e7a4)
 
-##📦 Future Improvements
+## 📦 Future Improvements
 1.Add user authentication
 2.Implement pagination
 3.Add search/filter functionality
