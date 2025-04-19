@@ -10,7 +10,6 @@ import { Status } from './enum/status.enum';
 import { Server } from './interface/server';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
-import { NotificationService } from './service/notification.service';
 //import { trigger, state, style, transition, animate } from '@angular/animations';
 
 @Component({
@@ -26,18 +25,7 @@ import { NotificationService } from './service/notification.service';
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  /*animations: [
-    trigger('flyInOut', [
-      state('in', style({ transform: 'translateX(0)', opacity: 1 })),
-      transition(':enter', [
-        style({ transform: 'translateX(100%)', opacity: 0 }),
-        animate('300ms ease-in')
-      ]),
-      transition(':leave', [
-        animate('300ms ease-out', style({ transform: 'translateX(100%)', opacity: 0 }))
-      ])
-    ])
-  ]*/
+
 })
 
 export class AppComponent implements OnInit{
@@ -53,20 +41,19 @@ export class AppComponent implements OnInit{
 
   constructor(
     private serverService: ServerService,
-    private toaster: NotificationService
-  ){}
+    private toastr: ToastrService
+  ) {}
+
 
   ngOnInit(): void {
     this.appState$ = this.serverService.servers$
     .pipe(
       map(response => {
-        this.toaster.onDefault(response.message);
         this.dataSubject.next(response);
         return{dataState: DataState.LOADED_STATE, appData: {...response, data: {servers: response.data.servers.reverse()}}}
         }),
         startWith({dataState: DataState.LOADING_STATE}),
         catchError((error: string)=>{
-          this.toaster.onDefault(error);
           return of({ dataState: DataState.ERROR_STATE, error})
         })
       );
@@ -76,16 +63,16 @@ export class AppComponent implements OnInit{
     this.appState$ = this.serverService.ping$(ipAddress)
     .pipe(
       map(response => {
+        this.toastr.info(`Pinged ${ipAddress}`, 'Ping Success');
         const index = this.dataSubject.value.data.servers.findIndex(server => server.id === response.data.server.id);
         this.dataSubject.value.data.servers[index] = response.data.server;
         this.filterSubject.next('');
-        this.toaster.onDefault(response.message);
         return{dataState: DataState.LOADED_STATE, appData: this.dataSubject.value}
         }),
         startWith({dataState: DataState.LOADED_STATE, appData: this.dataSubject.value}),
         catchError((error: string)=>{
+          this.toastr.error(`Ping failed for ${ipAddress}`, 'Ping Error');
           this.filterSubject.next('');
-          this.toaster.onDefault(error);
           return of({ dataState: DataState.ERROR_STATE, error})
         })
       );
@@ -99,16 +86,16 @@ export class AppComponent implements OnInit{
         this.dataSubject.next(
           {...response, data:{ servers:[response.data.server, ...this.dataSubject.value.data.servers]}}
         );
-        this.toaster.onDefault(response.message);
         document.getElementById('closeModal').click();
         this.isLoading.next(false);
         serverForm.resetForm({status: this.Status.SERVER_DOWN});
+        this.toastr.success('Server saved successfully!', 'Success');
         return{dataState: DataState.LOADED_STATE, appData: this.dataSubject.value}
         }),
         startWith({dataState: DataState.LOADED_STATE, appData: this.dataSubject.value}),
         catchError((error: string)=>{
+          this.toastr.error('Failed to save server', 'Error');
           this.isLoading.next(false);
-          this.toaster.onDefault(error);
           return of({ dataState: DataState.ERROR_STATE, error})
         })
       );
@@ -117,12 +104,10 @@ export class AppComponent implements OnInit{
     this.appState$ = this.serverService.filter$(status, this.dataSubject.value)
     .pipe(
       map(response => {
-        this.toaster.onDefault(response.message);
         return{dataState: DataState.LOADED_STATE, appData: response};
         }),
         startWith({dataState: DataState.LOADED_STATE, appData: this.dataSubject.value}),
         catchError((error: string)=>{
-          this.toaster.onDefault(error);
           return of({ dataState: DataState.ERROR_STATE, error})
         })
       );
@@ -132,17 +117,17 @@ export class AppComponent implements OnInit{
     this.appState$ = this.serverService.delete$(server.id)
     .pipe(
       map(response => {
+        this.toastr.warning(`${server.name} deleted`, 'Server Deleted');
         this.dataSubject.next(
           { ...response, data:
             {servers: this.dataSubject.value.data.servers.filter(s => s.id !== server.id)}
           }
         );
-        this.toaster.onDefault(response.message);
         return{dataState: DataState.LOADED_STATE, appData: this.dataSubject.value}
         }),
         startWith({dataState: DataState.LOADED_STATE, appData: this.dataSubject.value}),
         catchError((error: string)=>{
-          this.toaster.onDefault(error);
+          this.toastr.error('Failed to delete server', 'Error');
           return of({ dataState: DataState.ERROR_STATE, error})
         })
       );
@@ -150,7 +135,6 @@ export class AppComponent implements OnInit{
 
   printReport(): void {
     //window.print();
-    this.toaster.onDefault('Report downloaded');
     let dataType = 'application/vnd.ms-excel.sheet.macroEnabled.12';
     let tableSelect = document.getElementById('servers');
     let tableHtml = tableSelect.outerHTML.replace(/ /g, '%20');

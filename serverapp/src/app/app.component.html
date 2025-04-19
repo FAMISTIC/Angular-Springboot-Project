@@ -4,13 +4,13 @@
     <div class="table-wrapper">
       <div class="table-title">
         <div class="row">
-          <div class="col-sm-6">
+          <div class="col-sm-6 d-flex justify-content-end align-items-center gap-2">
             <h2>Manage Servers</h2>
           </div>
-          <div class="col-sm-6">
+          <div class="col-sm-6 d-flex justify-content-end align-items-center gap-2">
             <button (click)="printReport()" type="button" class="btn btn-primary">Print Report</button>
             <a href="#addEmployeeModal" class="btn btn-success" data-toggle="modal">
-              <i class="material-icons">&#xE147;<span>New Server</span></i>
+              <i class="material-icons">add</i> <span>New Server</span>
             </a>
             <span>
               <select name="status" ngModel="ALL" (ngModelChange)="filterServers($event)"
