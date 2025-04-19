@@ -36,9 +36,9 @@ Check them out at https://www.amigoscode.com
 ![Server UI Page](https://github.com/user-attachments/assets/5be545f9-0448-4bc8-966b-6b19ef33e7a4)
 
 ## 📦 Future Improvements
-1.Add user authentication
-2.Implement pagination
-3.Add search/filter functionality
+1. Add user authentication
+2. Implement pagination
+3. Add search/filter functionality
 
 ```bash
 ./mvnw spring-boot:run
