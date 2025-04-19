@@ -32,7 +32,7 @@ Inspired by Amigoscode tutorials.
 SHOUT OUT TO AMIGOSCODE for the awesome and beginner-friendly content!
 Check them out at https://www.amigoscode.com
 
-##📸 Screenshots
+## 📸 Screenshots
 ![Server UI Page](https://github.com/user-attachments/assets/5be545f9-0448-4bc8-966b-6b19ef33e7a4)
 
 ##📦 Future Improvements
