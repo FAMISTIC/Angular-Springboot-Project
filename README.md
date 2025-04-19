@@ -6,7 +6,7 @@ A full-stack CRUD (Create, Read, Update, Delete) application built with **Angula
 
 - **Frontend**: Angular
 - **Backend**: Spring Boot
-- **Database**: (Add your DB here, e.g., MySQL / H2 / PostgreSQL)
+- **Database**: (MySQL)
 
 ## 📚 Features
 
@@ -39,6 +39,7 @@ Check them out at https://www.amigoscode.com
 1. Add user authentication
 2. Implement pagination
 3. Add search/filter functionality
+4. Add cloud database
 
 ```bash
 ./mvnw spring-boot:run
